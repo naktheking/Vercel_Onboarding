@@ -1,0 +1,39 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+#text_button {
+  width: 45em;
+}
+
+#person_button {
+  width: 10em;
+}
+
+.clock-pop {
+  position: absolute;
+  left: 50%;
+  top: 0em;
+  transform: translateX(-50%);
+  width: 65em;
+  height: 65em;
+  pointer-events: none;
+  animation: clockFade 0.7s ease-out forwards;
+}
+
+@keyframes clockFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.7);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.2);
+  }
+}
