@@ -8,7 +8,7 @@ export function InputBox( {setMessages} ) {
 
 
   const insertMessage = async (message, person) => {
-    const res = await fetch("http://localhost:3000/api/sendMessage", {
+    const res = await fetch("/api/sendMessage", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message, person}),

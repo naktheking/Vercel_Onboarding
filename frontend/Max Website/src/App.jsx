@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch("http://localhost:3000/api/getMessage");
+      const res = await fetch("/api/getMessage");
       const data = await res.json();
       setMessages(data);
     };
