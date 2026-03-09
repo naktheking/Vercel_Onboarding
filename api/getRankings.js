@@ -43,7 +43,12 @@ export default async function handler(req, res) {
     await connectDB();
 
     const names = parseNames(process.env.RANKING_NAMES);
-    if (names.length === 0) return res.status(200).json([]);
+    if (names.length === 0) {
+      return res.status(400).json({
+        error:
+          "RANKING_NAMES is not set. Add it as an environment variable (comma/newline separated names).",
+      });
+    }
 
     const docs = await Message.find({}, { message: 1, person: 1, createdAt: 1 });
 
