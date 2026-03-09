@@ -26,7 +26,7 @@ function App() {
         <InputBox setMessages={setMessages} />
         <Quotes messages={messages} />
       </div>
-      <RankingBox messages={messages} />
+      <RankingBox />
     </div>
   )
 }

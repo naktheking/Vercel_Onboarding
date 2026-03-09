@@ -1,77 +1,66 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-function escapeRegExp(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+export function RankingBox() {
+  const [rankings, setRankings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-function parseNames(text) {
-  const raw = text
-    .split(/[\n,]+/g)
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  const seen = new Set();
-  const out = [];
-  for (const name of raw) {
-    const key = name.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(name);
-  }
-  return out;
-}
-
-export function RankingBox({ messages }) {
-  const [namesText, setNamesText] = useState("");
-
-  const names = useMemo(() => parseNames(namesText), [namesText]);
-
-  const rankings = useMemo(() => {
-    const safeMessages = Array.isArray(messages) ? messages : [];
-
-    const counts = names.map((name) => {
-      const re = new RegExp(`\\b${escapeRegExp(name)}\\b`, "i");
-      let count = 0;
-      for (const msg of safeMessages) {
-        const hay = `${msg?.person ?? ""} ${msg?.message ?? ""}`;
-        if (re.test(hay)) count += 1;
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch("/api/getRankings");
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `Request failed (${res.status})`);
+        }
+        const data = await res.json();
+        if (!alive) return;
+        setRankings(Array.isArray(data) ? data : []);
+      } catch (e) {
+        if (!alive) return;
+        setError(e?.message || "Failed to load rankings");
+        setRankings([]);
+      } finally {
+        if (!alive) return;
+        setLoading(false);
       }
-      return { name, count };
-    });
+    };
+    load();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-    counts.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-    return counts;
-  }, [messages, names]);
+  const trackedCount = useMemo(() => rankings.length, [rankings]);
 
   return (
     <aside className="rankingBox">
       <div className="rankingHeader">
         <h2>Rankings</h2>
         <p>
-          <i>Paste names (comma or newline separated)</i>
+          <i>Top Ranked of Being Clocked, lock in fam</i>
         </p>
       </div>
-
-      <textarea
-        className="rankingInput"
-        value={namesText}
-        onChange={(e) => setNamesText(e.target.value)}
-        placeholder={"e.g.\nAlice\nBob\nCharlie"}
-        rows={6}
-      />
 
       <div className="rankingMeta">
         <p>
           <i>
-            Tracking: <b>{names.length}</b> name{names.length === 1 ? "" : "s"}
+            Tracking: <b>{trackedCount}</b> name{trackedCount === 1 ? "" : "s"}
           </i>
         </p>
       </div>
 
       <div className="rankingList" aria-label="ranking list">
-        {names.length === 0 ? (
+        {loading ? (
+          <p style={{ opacity: 0.8 }}>Loading…</p>
+        ) : error ? (
+          <p style={{ opacity: 0.8 }}>{error}</p>
+        ) : rankings.length === 0 ? (
           <p style={{ opacity: 0.8 }}>
-            Add some names above to see who appears most in your quotes.
+            No rankings configured yet.
           </p>
         ) : (
           rankings.map((row, idx) => (
