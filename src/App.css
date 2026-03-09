@@ -4,6 +4,110 @@
   padding: 2rem;
   text-align: center;
 }
+
+.appLayout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.appMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rankingBox {
+  flex: 0 0 320px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.18);
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+
+.rankingHeader h2 {
+  margin: 0;
+}
+
+.rankingHeader p {
+  margin: 0.25rem 0 0.75rem 0;
+  opacity: 0.85;
+}
+
+.rankingInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+
+.rankingMeta {
+  margin-top: 0.5rem;
+  opacity: 0.9;
+}
+
+.rankingList {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rankingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rankingLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.rankingRank {
+  width: 1.5rem;
+  display: inline-block;
+  opacity: 0.8;
+}
+
+.rankingName {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankingCount {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+  .appLayout {
+    flex-direction: column;
+  }
+  .rankingBox {
+    position: static;
+    width: 100%;
+    max-height: none;
+  }
+}
 #text_button {
   width: 45em;
 }
