@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import clockImg from "../assets/clock_image.png"
+import gongMp3 from "../assets/GONG.mp3"
 
 export function InputBox( {setMessages} ) {
   const [inputText, setInputText] = useState("");
   const [inputPerson, setInputPerson] = useState("");
   const [showClock, setShowClock] = useState(false);
+  const gongRef = useRef(null);
+
+  useEffect(() => {
+    const audio = new Audio(gongMp3);
+    audio.preload = "auto";
+    gongRef.current = audio;
+    return () => {
+      gongRef.current = null;
+    };
+  }, []);
 
 
   const insertMessage = async (message, person) => {
@@ -21,6 +32,14 @@ export function InputBox( {setMessages} ) {
   const sendMessage = async () => {
     if (inputText.trim() === "") return;
     const personToSend = inputPerson.trim() === "" ? "Unknown" : inputPerson;
+    if (gongRef.current) {
+      try {
+        gongRef.current.currentTime = 0;
+        void gongRef.current.play();
+      } catch {
+        // ignore play errors (e.g. browser policy / interrupted playback)
+      }
+    }
     
     // show clock
     setShowClock(true);
