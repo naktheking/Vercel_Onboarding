@@ -41,6 +41,15 @@ export function InputBox( {setMessages} ) {
       }
     }
     
+    if (gongRef.current) {
+      try {
+        gongRef.current.currentTime = 0;
+        void gongRef.current.play();
+      } catch {
+        // ignore play errors (e.g. browser policy / interrupted playback)
+      }
+    }
+
     // show clock
     setShowClock(true);
     // hide it after animation finishes (match CSS duration)
