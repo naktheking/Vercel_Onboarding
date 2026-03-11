@@ -50,13 +50,13 @@ export default async function handler(req, res) {
       });
     }
 
-    const docs = await Message.find({}, { message: 1, person: 1, createdAt: 1 });
+    const docs = await Message.find({}, { person: 1 });
 
     const counts = names.map((name) => {
       const re = new RegExp(`\\b${escapeRegExp(name)}\\b`, "i");
       let count = 0;
       for (const msg of docs) {
-        const hay = `${msg?.person ?? ""} ${msg?.message ?? ""}`;
+        const hay = msg?.person ?? "";
         if (re.test(hay)) count += 1;
       }
       return { name, count };
